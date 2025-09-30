@@ -148,6 +148,14 @@ var app = new Vue({
       
       // and then recreate the backup, because resetting the data also emptied the backup
       this.dataBackup = JSON.parse(JSON.stringify(this.$data));
+      
+      // Track reset event
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackGeneratorEvent('pattern_reset', {
+          event_category: 'pattern_operations',
+          label: 'pattern_reset'
+        });
+      }
     },
 
     resetSelection() {
@@ -309,6 +317,25 @@ var app = new Vue({
       document.body.removeChild(el);
 
       alert("Link copied to clipboard");
+      
+      // Track sharing event
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackSharing();
+      }
+    },
+
+    downloadPNG() {
+      // Trigger download
+      if (this.show === 'Grid') {
+        this.gridDownloadCount++;
+      } else {
+        this.tilingDownloadCount++;
+      }
+      
+      // Track download event
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackDownload(this.show.toLowerCase());
+      }
     }, 
 
     requestFullscreen() {
@@ -672,10 +699,18 @@ var app = new Vue({
 
     symmetry() {
       this.resetSelection();
+      // Track symmetry change
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackParameterChange('symmetry', this.symmetry);
+      }
     },
 
     pattern() {
       this.resetSelection();
+      // Track pattern change
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackParameterChange('pattern', this.pattern);
+      }
     },
 
     radius() {
@@ -696,11 +731,19 @@ var app = new Vue({
 
     randomSeed() {
       this.resetSelection();
+      // Track random seed generation
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackRandomSeed();
+      }
     },
 
     show() {
       this.canvas1Resized = false;
       this.canvas2Resized = false;
+      // Track mode switch
+      if (window.PenroseAnalytics) {
+        window.PenroseAnalytics.trackModeSwitch(this.show);
+      }
     },
 
   },

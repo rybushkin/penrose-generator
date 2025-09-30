@@ -23,8 +23,24 @@
   <script src="libraries/p5.svg.js"></script>
   <script src="libraries/hsluv.min.js"></script>
   <script src="libraries/seedrandom.min.js"></script>
+  <script src="analytics.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,600;1,300;1,600&family=Raleway:wght@200;300;400;700&display=swap" rel="stylesheet"> 
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID', {
+      page_title: 'Penrose Tiles Generator',
+      page_location: window.location.href,
+      custom_map: {
+        'custom_parameter_1': 'penrose_generator'
+      }
+    });
+  </script>
 
 </head>
 
@@ -86,7 +102,7 @@
     <!-- Top Right Text Buttons - Common for both modes -->
     <div class="top-right-text-panel" v-if="!fullscreen">
       <span class="text-btn" @click="copyURLToClipboard">Share</span>
-      <span class="text-btn" @click="show === 'Grid' ? gridDownloadCount++ : tilingDownloadCount++">Save PNG</span>
+      <span class="text-btn" @click="downloadPNG">Save PNG</span>
     </div>
 
     <div class="half"  :style="{display: show.toLowerCase().includes('grid') ? 'flex' : 'none'}">
