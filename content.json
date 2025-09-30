@@ -1,0 +1,62 @@
+{
+  "idea": {
+    "title": "Create with math",
+    "body": "A Penrose tiling is an example of an aperiodic tiling: a covering of the plane by non-overlapping shapes that never repeats in a regular cycle. Despite lacking translational symmetry, these tilings can still exhibit reflection symmetry and high-order rotational symmetry. Named after mathematician and physicist Roger Penrose, they show how local rules generate global order without periodic patterns. This page lets you explore that idea interactively: adjust symmetry, phase, scale, noise and color to see how small rule changes reshape the whole structure."
+  },
+  "controls": [
+    {
+      "id": "symmetry",
+      "label": "Symmetry",
+      "description": "Number of rotational axes. Sets the families of guiding lines and the types of tiles available. Higher values produce richer combinations."
+    },
+    {
+      "id": "pattern",
+      "label": "Pattern",
+      "description": "Phase offset of the pattern. Slides line families against each other to change tile arrangements without altering symmetry."
+    },
+    {
+      "id": "rotate",
+      "label": "Rotate",
+      "description": "Rotates the scene (degrees). Spins the view around the center without changing the underlying rules."
+    },
+    {
+      "id": "radius",
+      "label": "Radius",
+      "description": "Construction radius in grid steps. Larger radius generates a wider area and more tiles in view."
+    },
+    {
+      "id": "zoom",
+      "label": "Zoom",
+      "description": "Visual scale of the tiling. Enlarges or reduces tile size on screen at a fixed construction radius."
+    },
+    {
+      "id": "pan",
+      "label": "Pan",
+      "description": "Horizontal camera shift. Moves the viewport left/right without regenerating the pattern."
+    },
+    {
+      "id": "disorder",
+      "label": "Disorder",
+      "description": "Amount of random deviation in line placement. Low values keep strict geometry; higher values add organic variation."
+    },
+    {
+      "id": "display",
+      "label": "Display",
+      "options": [
+        {
+          "value": "TILING",
+          "description": "Fills tiles using the current palette."
+        },
+        {
+          "value": "LINES",
+          "description": "Shows the constructive line grid the tiles derive from."
+        }
+      ]
+    },
+    {
+      "id": "color_hue",
+      "label": "Color (N°)",
+      "description": "Base hue in degrees on the color wheel (0–360). Shifts the overall palette; specific tile types can be manually overridden if custom coloring is enabled."
+    }
+  ]
+}

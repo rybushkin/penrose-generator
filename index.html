@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Pattern Collider</title>
+
+  <meta name="viewport" content="width=device-width,  initial-scale=1.0">
+  <meta name="description" content="Create And Share Mathematical Tiling Patterns">
+  <meta name="author" content="Aatish Bhatia">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="manifest" href="assets/site.webmanifest">
+
+  <link rel="stylesheet" type="text/css" href="normalize.css">
+  <link rel="stylesheet" type="text/css" href="style.css?v=7">
+  <!-- Load in libraries here -->
+  <script src="libraries/vue.min.js"></script>
+  <script src="libraries/p5.min.js"></script>
+  <script src="libraries/p5.svg.js"></script>
+  <script src="libraries/hsluv.min.js"></script>
+  <script src="libraries/seedrandom.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,600;1,300;1,600&family=Raleway:wght@200;300;400;700&display=swap" rel="stylesheet"> 
+
+</head>
+
+<body>
+
+<div id="root"> <!-- Vue can only access things contained within this div -->
+
+
+  <header>
+    <div class="title" v-if="!fullscreen">
+      <h1 class="ascii-title">><>< <strong>penrose generator</strong> >< create patterns >< explore (a)symmetries ><>< love math ><><</h1>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Top Left Settings - Common for both modes -->
+    <div class="top-left-panel" v-if="!fullscreen">
+      <div class="settings-group">
+        <div class="setting-item">
+          <label>Symmetry: {{ symmetry }}</label>
+          <input class="mini-slider" type="range" v-model.number="symmetry" min="3" max="19" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Pattern: {{ pattern }}</label>
+          <input class="mini-slider" type="range" v-model.number="pattern" min="0" max="1" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Rotate: {{rotate}}°</label>
+          <input class="mini-slider" type="range" v-model.number="rotate" min="-180" max="180" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Radius: {{ radius }}</label>
+          <input class="mini-slider" type="range" v-model.number="radius" min="0" max="150" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Zoom: {{ zoom }}</label>
+          <input class="mini-slider" type="range" v-model.number="zoom" min="0.25" max="3" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Pan: {{ pan }}</label>
+          <input class="mini-slider" type="range" v-model.number="pan" min="0" max="1" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Disorder: {{ disorder }}</label>
+          <input class="mini-slider" type="range" v-model.number="disorder" min="0" max="1" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Random:</label>
+          <button class="mini-btn" @click="randomSeed = Math.round(100 * (randomSeed + 0.01)) / 100">Random</button>
+        </div>
+        <div class="setting-item">
+          <label>Color: {{ colorHue }}°</label>
+          <input class="mini-slider" type="range" v-model.number="colorHue" min="0" max="360" step="1" @input="updateColorScheme">
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Right Text Buttons - Common for both modes -->
+    <div class="top-right-text-panel" v-if="!fullscreen">
+      <span class="text-btn" @click="copyURLToClipboard">Share</span>
+      <span class="text-btn" @click="show === 'Grid' ? gridDownloadCount++ : tilingDownloadCount++">Save PNG</span>
+    </div>
+
+    <div class="half"  :style="{display: show.toLowerCase().includes('grid') ? 'flex' : 'none'}">
+      <div class="stretch canvas-container">
+        
+        <p5 src="./drawGrid.js"
+        :style="{display: canvasDisplaySetting}"
+        :data="{
+          grid: grid,
+          multiplier: multiplier,
+          spacing: spacing,
+          intersectionPoints: intersectionPoints,
+          showIntersections: showIntersections,
+          selectedLines: selectedLines,
+          selectedTiles: selectedTiles,
+          display: canvasDisplaySetting,
+          rotate: rotate,
+          download: gridDownloadCount,
+          colorHue: colorHue
+        }"
+        v-on:update:add-line="selectedLines = [...selectedLines, $event]"
+        v-on:update:remove-line="selectedLines = selectedLines.filter(e => !(e.angle == $event.angle && e.index == $event.index))"
+        v-on:update:resize-completed="canvas1Resized = true"
+        v-on:update:width="if ($event) {width = $event}"
+        v-on:update:height="if ($event) {height = $event}"
+        ></p5>
+      </div>
+    </div>
+
+    <div class="half"  :style="{display: show.toLowerCase().includes('tiling') ? 'flex': 'none'}">
+      <div class="stretch canvas-container">
+        
+        <p5 src="./drawTiles.js"
+        :style="{display: canvasDisplaySetting}"
+        :data="{
+          tiles: intersectionPoints,
+          pan: pan,
+          steps: steps,
+          multiplier: multiplier,
+          zoom: zoom,
+          colorTiles: colorTiles,
+          colors: colorPalette,
+          selectedLines: selectedLines,
+          selectedTiles: selectedTiles,
+          display: canvasDisplaySetting,
+          symmetry: symmetry,
+          stroke: stroke,
+          showStroke: showStroke,
+          rotate: rotate,
+          orientationColoring: orientationColoring,
+          download: tilingDownloadCount,
+          colorHue: colorHue
+        }"
+        v-on:update:add-tile="selectedTiles = [...selectedTiles, $event]"
+        v-on:update:remove-tile="selectedTiles = selectedTiles.filter(e => !(e.x == $event.x && e.y == $event.y))"
+        v-on:update:resize-completed="canvas2Resized = true"
+        v-on:update:width="if ($event) {width = $event}"
+        v-on:update:height="if ($event) {height = $event}"
+        ></p5>
+      </div>
+    </div>
+
+    <!-- Bottom Left Display Buttons -->
+    <div class="bottom-left-panel" v-if="!fullscreen">
+      <div class="display-buttons">
+        <button class="display-btn" :class="{ active: show === 'Tiling' }" @click="show = 'Tiling'">TILING</button>
+        <button class="display-btn" :class="{ active: show === 'Grid' }" @click="show = 'Grid'">LINES</button>
+      </div>
+    </div>
+
+    <!-- Bottom Right Buttons -->
+    <div class="bottom-right-panel" v-if="!fullscreen">
+      <span class="text-btn" :class="{ 'text-btn-disabled': selectedTiles.length === 0 && selectedLines.length === 0 }" @click="clearSelection">Clear</span>
+      <span class="text-btn" @click="reset" v-if="queryURL.length > 0">Reset</span>
+    </div>
+
+
+  </main>
+
+  <!-- Green separator bar -->
+  <div class="separator-bar"></div>
+
+
+  <!-- Content Section -->
+  <section class="content-section" v-if="content && !fullscreen && showContent">
+    <div class="content-container">
+      
+      <div class="idea-section">
+        <h2 class="content-title">{{ content.idea.title }}</h2>
+        <p class="idea-text" v-html="content.idea.body"></p>
+      </div>
+
+      <div class="controls-section">
+        <h3 class="controls-title">Controls</h3>
+        <div class="controls-text">
+          <div class="controls-column" v-for="(column, index) in controlsColumns" :key="index">
+            <div class="control-text" v-for="control in column" :key="control.id">
+              <strong>{{ control.label }}:</strong> {{ control.description }}
+              <div v-if="control.options" class="control-options-text">
+                <div v-for="option in control.options" :key="option.value">
+                  <strong>{{ option.value }}:</strong> {{ option.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="controls-separator">⸻</div>
+
+  <footer class="copyright-footer">
+    <p>&copy; {{ getCurrentYear() }} Hook-n-Crutch • Penrose Tilings Generator. ASCII Terminal Style Interface.<br>
+    Based on <a href="https://github.com/aatishb/patterncollider" target="_blank" rel="noopener noreferrer">Pattern Collider by Aatish Bhatia</a> (2021) • MIT License</p>
+    <div class="laser-gradient"></div>
+  </footer>
+
+    </div>
+
+
+
+  <script src="vue-definitions.js?v=2"></script>
+
+</body>
+</html>
