@@ -96,7 +96,7 @@ This project implements the **multigrid method** for generating quasiperiodic ti
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgments
 
