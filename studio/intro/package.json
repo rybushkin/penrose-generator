@@ -1,0 +1,9 @@
+{
+  "name": "pattern-studio-intro",
+  "private": true,
+  "version": "0.3.0",
+  "type": "module",
+  "scripts": {"build": "vite build", "test": "node --test ../tests/*.test.cjs"},
+  "dependencies": {"@remotion/player": "4.0.533", "react": "19.3.0", "react-dom": "19.3.0", "remotion": "4.0.533"},
+  "devDependencies": {"vite": "8.3.2"}
+}

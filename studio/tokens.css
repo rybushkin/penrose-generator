@@ -1,0 +1,12 @@
+:root {
+  --canvas: #000000; --surface: #111110; --surface-hover: #1c1c1a;
+  --ink: #f4f2ec; --muted: #a8a4a0; --soft: #7a7772; --accent: #ff5c45;
+  --line: #ffffff1f; --line-strong: #ffffff42; --radius: 0;
+  --display: var(--font-geist-pixel-square), monospace;
+  --sans: var(--font-geist-sans), Arial, sans-serif;
+  --mono: var(--font-geist-mono), monospace;
+  --rail-width: 282px; --bar-height: 64px; --control-height: 40px;
+  --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px;
+  --dur-fast: 120ms; --dur-base: 200ms; --ease: cubic-bezier(.2,0,0,1);
+}
+@media (prefers-reduced-motion:reduce){:root{--dur-fast:0ms;--dur-base:0ms}}
