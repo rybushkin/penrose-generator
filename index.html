@@ -1,82 +1,231 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"><base href="./studio/"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Make order. Break repetition. A generative pattern studio by Bots & Bones.">
-  <title>Pattern Studio — Bots & Bones</title>
-  <link rel="icon" href="../favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="assets/fonts/fonts.css"><link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="studio.css"><link rel="stylesheet" href="intro.css">
-  <script defer src="../libraries/seedrandom.min.js"></script><script defer src="core.js"></script><script defer src="intro-motion.js"></script><script defer src="intro-shell.js"></script>
+  <meta charset="utf-8">
+  <title>Pattern Collider</title>
+
+  <meta name="viewport" content="width=device-width,  initial-scale=1.0">
+  <meta name="description" content="Create And Share Mathematical Tiling Patterns">
+  <meta name="author" content="Aatish Bhatia">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="manifest" href="assets/site.webmanifest">
+
+  <link rel="stylesheet" type="text/css" href="normalize.css">
+  <link rel="stylesheet" type="text/css" href="style.css?v=7">
+  <!-- Load in libraries here -->
+  <script src="libraries/vue.min.js"></script>
+  <script src="libraries/p5.min.js"></script>
+  <script src="libraries/p5.svg.js"></script>
+  <script src="libraries/hsluv.min.js"></script>
+  <script src="libraries/seedrandom.min.js"></script>
+  <script src="analytics.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,600;1,300;1,600&family=Raleway:wght@200;300;400;700&display=swap" rel="stylesheet"> 
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID', {
+      page_title: 'Penrose Tiles Generator',
+      page_location: window.location.href,
+      custom_map: {
+        'custom_parameter_1': 'penrose_generator'
+      }
+    });
+  </script>
+
 </head>
+
 <body>
-  <main id="intro" class="intro" aria-labelledby="intro-title">
-    <header class="intro-header"><a href="./" class="intro-wordmark">PATTERN STUDIO<span class="coral">.</span></a><span class="intro-edition">A STUDY IN NON-REPETITION <span>/ 001</span></span><span class="intro-maker">BOTS &amp; BONES</span></header>
-    <div class="intro-layout">
-      <div class="intro-copy">
-        <p class="intro-eyebrow"><span class="coral">01</span> / TWO SHAPES. ENDLESS POSSIBILITY.</p>
-        <h1 id="intro-title">Order<br> without<br> repetition<span class="coral">.</span></h1>
-        <p class="intro-lead">A few simple rules.<br>A whole new way to see.</p>
-        <button id="enter-studio" class="intro-enter">Open generator <span aria-hidden="true">↗</span></button>
-        <p id="entry-status" class="intro-entry-note" role="status">Make something only you could make.</p>
-      </div>
-      <section class="intro-art" aria-label="An animated Penrose mosaic, growing from two rhombs into a larger field">
-        <div class="intro-stage" id="intro-stage"><canvas id="intro-poster" aria-hidden="true"></canvas><div id="intro-player" aria-hidden="true"></div></div>
-        <div class="intro-playback"><span id="intro-caption">Inspired by Sir Roger Penrose.</span><div class="intro-controls"><button id="intro-pause" disabled>Pause</button><button id="intro-replay" disabled>Replay <span aria-hidden="true">↻</span></button><span class="intro-duration">18 SEC</span></div></div>
-      </section>
-      <section class="intro-dedication" aria-labelledby="penrose-title">
-        <div><p class="intro-eyebrow">THE IDEA BEHIND THE PATTERN</p><h2 id="penrose-title">Inspired by<br>Sir Roger Penrose<span class="coral">.</span></h2></div>
-        <div class="intro-biography"><p>Sir Roger Penrose is a mathematician and physicist whose aperiodic tilings reveal order without repetition. In 2020, he received the Nobel Prize in Physics for his work on black holes.</p><div class="intro-sources"><a href="https://www.maths.ox.ac.uk/outreach/oxford-mathematics-alphabet/aperiodic-tiles" target="_blank" rel="noopener noreferrer">The geometry ↗</a><a href="https://www.nobelprize.org/prizes/physics/2020/penrose/facts/" target="_blank" rel="noopener noreferrer">The physicist ↗</a></div></div>
-      </section>
+
+<div id="root"> <!-- Vue can only access things contained within this div -->
+
+
+  <header>
+    <div class="title" v-if="!fullscreen">
+      <h1 class="ascii-title">><>< <strong>penrose generator</strong> >< create patterns >< explore (a)symmetries ><>< love math ><><</h1>
     </div>
-    <footer class="intro-footer"><span>BUILT FROM A FEW SIMPLE RULES.</span><span>YOUR TURN TO EXPLORE.</span></footer>
-  </main>
-  <div id="editor" hidden>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="Pattern Studio home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 1 23 9 16 16 9 9ZM16 16 23 23 16 31 9 23ZM1 16 9 9 16 16 9 23ZM16 16 23 9 31 16 23 23Z" fill="currentColor"/></svg><span>BOTS &amp; BONES</span></a>
-    <div class="topbar-label">GENERATIVE TOOLS <span>/</span> 001</div>
-    <div class="topbar-right"><span class="version">STUDIO 0.3</span><a href="../original.html" class="original-link">Original ↗</a></div>
   </header>
-  <main class="workspace">
-    <aside class="rail" aria-label="Pattern controls">
-      <div class="rail-heading"><h1>Pattern<br> Studio<span class="coral">.</span></h1><p>Make order. Break repetition.</p></div>
-      <section class="presets-section"><div class="section-label"><span>START SOMEWHERE</span><span>↓</span></div><div id="presets" class="preset-grid"></div></section>
-      <div class="control-tabs" role="tablist" aria-label="Control categories"><button id="tab-geometry" role="tab" aria-selected="true" aria-controls="panel-geometry" data-tab="geometry">Geometry</button><button id="tab-color" role="tab" aria-selected="false" aria-controls="panel-color" data-tab="color" tabindex="-1">Color</button><button id="tab-composition" role="tab" aria-selected="false" aria-controls="panel-composition" data-tab="composition" tabindex="-1">Compose</button></div>
-      <section id="panel-geometry" role="tabpanel" aria-labelledby="tab-geometry" class="control-panel">
-        <div class="field"><label for="symmetry">Symmetry <output id="value-symmetry">05</output></label><input id="symmetry" type="range" min="3" max="19" step="1"><p class="field-note" id="symmetry-note">Five directions. Never repeating.</p></div>
-        <div class="field"><label for="phase">Pattern <output id="value-phase"></output></label><input id="phase" type="range" min="0" max="1" step="0.001"></div>
-        <div class="field"><label for="radius">Density <output id="value-radius"></output></label><input id="radius" type="range" min="15" max="150" step="1"></div>
-        <div class="field"><label for="disorder">Disorder <output id="value-disorder"></output></label><input id="disorder" type="range" min="0" max="1" step="0.01"></div>
-        <div class="field seed-field"><label for="seed">Seed</label><input id="seed" type="number" min="0" max="999999" step="1"><p class="field-note">A repeatable starting point for disorder.</p></div>
-      </section>
-      <section id="panel-color" role="tabpanel" aria-labelledby="tab-color" class="control-panel" hidden>
-        <div class="section-label"><span>ARTWORK PALETTE</span><button class="text-button" id="lock-palette" aria-pressed="false">Lock ◇</button></div>
-        <div id="palettes" class="palettes"></div>
-        <div class="field"><label for="color-mode">Color by</label><select id="color-mode"><option value="shape">Tile shape</option><option value="orientation">Tile orientation</option></select></div>
-        <label class="checkbox"><input id="filled" type="checkbox"> Fill tiles</label><label class="checkbox"><input id="outline" type="checkbox"> Show edges</label>
-        <div class="color-fields"><label for="foreground">Line color <input id="foreground" type="color"></label><label for="background">Background <input id="background" type="color"></label></div>
-      </section>
-      <section id="panel-composition" role="tabpanel" aria-labelledby="tab-composition" class="control-panel" hidden>
-        <div class="field"><label for="rotation">Rotation <output id="value-rotation"></output></label><input id="rotation" type="range" min="-180" max="180" step="1"></div>
-        <div class="field"><label for="zoom">Scale <output id="value-zoom"></output></label><input id="zoom" type="range" min="0.25" max="5" step="0.01"></div>
-        <div class="field"><label for="crop">Canvas format</label><select id="crop"><option value="landscape">Landscape · 16:10</option><option value="square">Square · 1:1</option><option value="phone">Phone · 9:16</option><option value="poster">Poster · 2:3</option></select></div>
-        <p class="field-note">Drag the artwork to compose. Scroll or pinch to zoom.</p><button id="reset-camera" class="secondary-button full-width">Recenter artwork ↗</button>
-      </section>
-      <div class="rail-actions"><button id="new-composition" class="primary-button full-width"><span>New composition</span><span>↗</span></button><p class="rail-footnote">Same rules. Endless possibilities.</p></div>
-    </aside>
-    <section class="studio" aria-label="Artwork workspace">
-      <div class="workspace-bar"><div><span class="micro coral">LIVE CANVAS</span><span id="scene-name" class="scene-name">01 / Fivefold</span></div><div class="workspace-actions"><button id="share" class="icon-text">Share ↗</button><button id="open-export" class="primary-button">Export <span>↗</span></button></div></div>
-      <div class="canvas-zone" id="canvas-zone">
-        <div class="canvas-meta"><span id="canvas-format">LANDSCAPE / 16:10</span><span id="tile-count">BUILDING PATTERN</span></div>
-        <div class="artwork-wrap" id="artwork-wrap"><canvas id="artwork" tabindex="0" role="img" aria-label="Interactive mosaic. Drag to pan, scroll to zoom, click a tile to select. Use arrow keys to pan, plus or minus to zoom."></canvas><span class="registration top-left" aria-hidden="true">+</span><span class="registration top-right" aria-hidden="true">+</span><span class="registration bottom-left" aria-hidden="true">+</span><span class="registration bottom-right" aria-hidden="true">+</span></div>
-        <div class="canvas-toolbar"><div class="view-switch" aria-label="View"><button id="view-tiles" aria-pressed="true">Tiles</button><button id="view-grid" aria-pressed="false">Lines</button></div><div class="camera-tools"><button id="zoom-out" aria-label="Zoom out">−</button><span id="zoom-readout">132%</span><button id="zoom-in" aria-label="Zoom in">+</button><button id="fit" aria-label="Recenter canvas">⌖</button></div><button id="clear-selection" class="text-button" disabled>Clear selection</button></div>
+
+  <main>
+
+    <!-- Top Left Settings - Common for both modes -->
+    <div class="top-left-panel" v-if="!fullscreen">
+      <div class="settings-group">
+        <div class="setting-item">
+          <label>Symmetry: {{ symmetry }}</label>
+          <input class="mini-slider" type="range" v-model.number="symmetry" min="3" max="19" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Pattern: {{ pattern }}</label>
+          <input class="mini-slider" type="range" v-model.number="pattern" min="0" max="1" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Rotate: {{rotate}}°</label>
+          <input class="mini-slider" type="range" v-model.number="rotate" min="-180" max="180" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Radius: {{ radius }}</label>
+          <input class="mini-slider" type="range" v-model.number="radius" min="0" max="150" step="1">
+        </div>
+        <div class="setting-item">
+          <label>Zoom: {{ zoom }}</label>
+          <input class="mini-slider" type="range" v-model.number="zoom" min="0.25" max="3" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Pan: {{ pan }}</label>
+          <input class="mini-slider" type="range" v-model.number="pan" min="0" max="1" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Disorder: {{ disorder }}</label>
+          <input class="mini-slider" type="range" v-model.number="disorder" min="0" max="1" step="0.01">
+        </div>
+        <div class="setting-item">
+          <label>Random:</label>
+          <button class="mini-btn" @click="randomSeed = Math.round(100 * (randomSeed + 0.01)) / 100">Random</button>
+        </div>
+        <div class="setting-item">
+          <label>Color: {{ colorHue }}°</label>
+          <input class="mini-slider" type="range" v-model.number="colorHue" min="0" max="360" step="1" @input="updateColorScheme">
+        </div>
       </div>
-      <section class="variations" aria-label="Saved variations"><div class="variations-head"><h2>Variations <span id="variant-count">00</span></h2><div><button id="compare" class="text-button" disabled>Compare ↔</button><button id="save-variant" class="secondary-button">Save variation +</button></div></div><div id="variant-list" class="variant-list"><p class="empty-variants">Keep a good accident.<br><span>Save a variation to come back to it.</span></p></div></section>
-      <footer class="studio-footer"><span>BUILT FROM A FEW SIMPLE RULES.</span><span><a href="https://github.com/aatishb/patterncollider" target="_blank" rel="noopener noreferrer">Multigrid geometry · Aatish Bhatia ↗</a></span></footer>
-    </section>
+    </div>
+
+    <!-- Top Right Text Buttons - Common for both modes -->
+    <div class="top-right-text-panel" v-if="!fullscreen">
+      <span class="text-btn" @click="copyURLToClipboard">Share</span>
+      <span class="text-btn" @click="downloadPNG">Save PNG</span>
+    </div>
+
+    <div class="half"  :style="{display: show.toLowerCase().includes('grid') ? 'flex' : 'none'}">
+      <div class="stretch canvas-container">
+        
+        <p5 src="./drawGrid.js"
+        :style="{display: canvasDisplaySetting}"
+        :data="{
+          grid: grid,
+          multiplier: multiplier,
+          spacing: spacing,
+          intersectionPoints: intersectionPoints,
+          showIntersections: showIntersections,
+          selectedLines: selectedLines,
+          selectedTiles: selectedTiles,
+          display: canvasDisplaySetting,
+          rotate: rotate,
+          download: gridDownloadCount,
+          colorHue: colorHue
+        }"
+        v-on:update:add-line="selectedLines = [...selectedLines, $event]"
+        v-on:update:remove-line="selectedLines = selectedLines.filter(e => !(e.angle == $event.angle && e.index == $event.index))"
+        v-on:update:resize-completed="canvas1Resized = true"
+        v-on:update:width="if ($event) {width = $event}"
+        v-on:update:height="if ($event) {height = $event}"
+        ></p5>
+      </div>
+    </div>
+
+    <div class="half"  :style="{display: show.toLowerCase().includes('tiling') ? 'flex': 'none'}">
+      <div class="stretch canvas-container">
+        
+        <p5 src="./drawTiles.js"
+        :style="{display: canvasDisplaySetting}"
+        :data="{
+          tiles: intersectionPoints,
+          pan: pan,
+          steps: steps,
+          multiplier: multiplier,
+          zoom: zoom,
+          colorTiles: colorTiles,
+          colors: colorPalette,
+          selectedLines: selectedLines,
+          selectedTiles: selectedTiles,
+          display: canvasDisplaySetting,
+          symmetry: symmetry,
+          stroke: stroke,
+          showStroke: showStroke,
+          rotate: rotate,
+          orientationColoring: orientationColoring,
+          download: tilingDownloadCount,
+          colorHue: colorHue
+        }"
+        v-on:update:add-tile="selectedTiles = [...selectedTiles, $event]"
+        v-on:update:remove-tile="selectedTiles = selectedTiles.filter(e => !(e.x == $event.x && e.y == $event.y))"
+        v-on:update:resize-completed="canvas2Resized = true"
+        v-on:update:width="if ($event) {width = $event}"
+        v-on:update:height="if ($event) {height = $event}"
+        ></p5>
+      </div>
+    </div>
+
+    <!-- Bottom Left Display Buttons -->
+    <div class="bottom-left-panel" v-if="!fullscreen">
+      <div class="display-buttons">
+        <button class="display-btn" :class="{ active: show === 'Tiling' }" @click="show = 'Tiling'">TILING</button>
+        <button class="display-btn" :class="{ active: show === 'Grid' }" @click="show = 'Grid'">LINES</button>
+      </div>
+    </div>
+
+    <!-- Bottom Right Buttons -->
+    <div class="bottom-right-panel" v-if="!fullscreen">
+      <span class="text-btn" :class="{ 'text-btn-disabled': selectedTiles.length === 0 && selectedLines.length === 0 }" @click="clearSelection">Clear</span>
+      <span class="text-btn" @click="reset" v-if="queryURL.length > 0">Reset</span>
+    </div>
+
+
   </main>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <dialog id="export-dialog" aria-labelledby="export-title"><div class="dialog-heading"><div><p class="micro coral">TAKE IT WITH YOU</p><h2 id="export-title">Export artwork.</h2></div><button class="close-dialog" aria-label="Close export">×</button></div><div class="dialog-body"><p>Your current canvas composition, ready for the outside world.</p><div class="export-preview"><canvas id="export-preview"></canvas></div><div class="export-fields"><div class="field"><label for="export-type">File type</label><select id="export-type"><option value="png">PNG · image</option><option value="svg">SVG · vector</option></select></div><div class="field"><label for="export-size">Longest edge</label><select id="export-size"><option value="4096">4K · 4096 px</option><option value="2048">2K · 2048 px</option><option value="1080">1080 px</option></select></div></div><label class="checkbox"><input id="transparent" type="checkbox"> Transparent background</label><p class="field-note" id="export-dimensions"></p><button id="download" class="primary-button full-width">Download artwork ↓</button></div></dialog>
-  <dialog id="compare-dialog" class="compare-dialog" aria-labelledby="compare-title"><div class="dialog-heading"><div><p class="micro coral">SIDE BY SIDE</p><h2 id="compare-title">Find your favorite.</h2></div><button class="close-dialog" aria-label="Close comparison">×</button></div><div class="compare-grid"><div><label for="compare-a">Variation A</label><select id="compare-a"></select><canvas id="compare-canvas-a"></canvas><button id="use-a" class="secondary-button full-width">Use variation A ↗</button></div><div><label for="compare-b">Variation B</label><select id="compare-b"></select><canvas id="compare-canvas-b"></canvas><button id="use-b" class="secondary-button full-width">Use variation B ↗</button></div></div></dialog>
-  </div>
-  <noscript><p>Enable JavaScript to use the pattern generator.</p></noscript>
-</body></html>
+
+  <!-- Green separator bar -->
+  <div class="separator-bar"></div>
+
+
+  <!-- Content Section -->
+  <section class="content-section" v-if="content && !fullscreen && showContent">
+    <div class="content-container">
+      
+      <div class="idea-section">
+        <h2 class="content-title">{{ content.idea.title }}</h2>
+        <p class="idea-text" v-html="content.idea.body"></p>
+      </div>
+
+      <div class="controls-section">
+        <h3 class="controls-title">Controls</h3>
+        <div class="controls-text">
+          <div class="controls-column" v-for="(column, index) in controlsColumns" :key="index">
+            <div class="control-text" v-for="control in column" :key="control.id">
+              <strong>{{ control.label }}:</strong> {{ control.description }}
+              <div v-if="control.options" class="control-options-text">
+                <div v-for="option in control.options" :key="option.value">
+                  <strong>{{ option.value }}:</strong> {{ option.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="controls-separator">⸻</div>
+
+  <footer class="copyright-footer">
+    <p>&copy; {{ getCurrentYear() }} Hook-n-Crutch • Penrose Tilings Generator. ASCII Terminal Style Interface.<br>
+    Based on <a href="https://github.com/aatishb/patterncollider" target="_blank" rel="noopener noreferrer">Pattern Collider by Aatish Bhatia</a> (2021) • MIT License</p>
+    <div class="laser-gradient"></div>
+  </footer>
+
+    </div>
+
+
+
+  <script src="vue-definitions.js?v=2"></script>
+
+</body>
+</html>

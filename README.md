@@ -1,20 +1,3 @@
-# Pattern Studio 0.3
-
-The current homepage is [Pattern Studio](https://penrose.rybushk.in/).
-An 18-second silent intro leads into the pattern editor.
-The previous generator remains at [Original](https://penrose.rybushk.in/original.html).
-
-Serve the repository root with `python3 -m http.server 8892 --bind 127.0.0.1`.
-No build is needed for the included static website.
-Player rebuild instructions are in `studio/README.md`; sources and locked dependencies are in `studio/intro/`.
-
-GitHub Pages publishes `main` from `/`; keep `CNAME` unchanged.
-Rollback: revert the release commit and verify that the previous homepage is restored.
-
----
-
-## Original generator documentation
-
 # 🎨 Penrose Tiling Generator
 
 > **Interactive web application for generating and exploring Penrose tilings with ASCII terminal aesthetics**
